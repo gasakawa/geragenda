@@ -23,7 +23,8 @@
     "typeorm": "ts-node  -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migrations:generate": "yarn typeorm migration:generate  -d ./src/core/infra/db/config/migrations.config.ts",
     "migrations:create": "yarn typeorm migration:create",
-    "migrations:run": "yarn typeorm migration:run -- -d ./src/core/infra/db/config/migrations.config.ts"
+    "migrations:run": "yarn typeorm migration:run -- -d ./src/core/infra/db/config/migrations.config.ts",
+    "migrations:revert": "yarn typeorm migration:revert -- -d ./src/core/infra/db/config/migrations.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

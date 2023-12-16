@@ -30,7 +30,7 @@ export class ScheduleEntity extends BaseEntity {
 
   @Column({
     name: 'date_scheduled',
-    type: 'time with time zone',
+    type: 'timestamp with time zone',
   })
   dateScheduled: Date;
 

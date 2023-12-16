@@ -11,18 +11,18 @@ export abstract class BaseEntity {
 
   @CreateDateColumn({
     name: 'created_at',
-    type: 'time with time zone',
+    type: 'timestamp with time zone',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
-    type: 'time with time zone',
+    type: 'timestamp with time zone',
   })
   updatedAt: Date;
 
   @DeleteDateColumn({
-    type: 'time with time zone',
+    type: 'timestamp with time zone',
     name: 'deleted_at',
     nullable: true,
   })
