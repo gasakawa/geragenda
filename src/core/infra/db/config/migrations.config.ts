@@ -6,7 +6,6 @@ import { resolve } from 'path';
 config();
 
 const entitiesRoot = resolve(__dirname, '..', '..', '..', 'domain', 'entities');
-console.log('🚀 ~ file: migrations.config.ts:9 ~ entitiesRoot:', entitiesRoot);
 
 const options: DataSourceOptions = {
   type: 'postgres',
