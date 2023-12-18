@@ -1,7 +1,7 @@
 import { CognitoProvider } from '@/core/infra/aws/providers';
 import { UserRepository } from '@/core/infra/db/repositories/user.repository';
-import { Injectable } from '@nestjs/common';
-import { SignupUserRequestDto } from '../dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { SignupUserRequestDto, SignupUserResponseDto } from '../dto';
 import { UserEntity } from '@/core/domain/entities/user.entity';
 
 @Injectable()
@@ -11,22 +11,35 @@ export class CreateUserService {
     private readonly userRepo: UserRepository,
   ) {}
 
-  async execute(data: SignupUserRequestDto) {
+  async execute(data: SignupUserRequestDto): Promise<SignupUserResponseDto> {
     const tx = await this.userRepo.startTrx();
     try {
+      const usr = await this.userRepo.findOne({ email: data.email });
+
+      if (usr) {
+        throw new BadRequestException(
+          `The email ${data.email} is already used`,
+        );
+      }
+
       const { userSub } = await this.cognitoProvider.signup(data);
 
       if (userSub) {
         const user = new UserEntity();
         Object.assign(user, {
-          name: data.name,
+          fullName: data.name,
           email: data.email,
           tenantId: data.tenant ?? null,
+          mobileNumber: data.mobileNumber,
+          sub: userSub,
         });
 
-        const userInserted = await this.userRepo.save(user, tx);
+        await this.userRepo.save(user, tx);
         await tx.commitTransaction();
-        return userInserted;
+        return {
+          isConfirmed: false,
+          userSub: userSub,
+        };
       }
     } catch (error) {
       await tx.rollbackTransaction();

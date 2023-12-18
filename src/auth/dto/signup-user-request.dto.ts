@@ -17,4 +17,8 @@ export class SignupUserRequestDto {
   @IsString()
   @IsOptional()
   tenant?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  mobileNumber: string;
 }

@@ -1,6 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CognitoIdentityServiceProvider } from 'aws-sdk';
+import {
+  AdminCreateUserCommandInput,
+  AdminCreateUserCommandOutput,
+  CognitoIdentityProvider,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { AWSVersions } from '../api-versions';
 import { SignupUserRequestDto, SignupUserResponseDto } from '@/auth/dto';
 
@@ -9,7 +13,7 @@ export class CognitoProvider {
   private clientSecret: string;
   private clientId: string;
   private userPoolId: string;
-  private identityServiceProvider: CognitoIdentityServiceProvider;
+  private identityProvider: CognitoIdentityProvider;
   constructor(private readonly config: ConfigService) {
     this.init();
   }
@@ -18,7 +22,7 @@ export class CognitoProvider {
     this.clientId = this.config.getOrThrow('AWS_COGNITO_CLIENT_ID');
     this.clientSecret = this.config.getOrThrow('AWS_COGNITO_CLIENT_SECRET');
     this.userPoolId = this.config.getOrThrow('AWS_COGNITO_USER_POOL_ID');
-    this.identityServiceProvider = new CognitoIdentityServiceProvider({
+    this.identityProvider = new CognitoIdentityProvider({
       apiVersion: AWSVersions().cognito,
       region: this.config.getOrThrow('AWS_REGION'),
     });
@@ -36,7 +40,7 @@ export class CognitoProvider {
       },
       {
         Name: 'custom:tenant',
-        Value: data.tenant,
+        Value: 'customer',
       },
       {
         Name: 'custom:role',
@@ -49,11 +53,19 @@ export class CognitoProvider {
       UserPoolId: this.userPoolId,
       DesiredDeliveryMediums: ['EMAIL'],
       UserAttributes: userAttributes,
-    };
+      MessageAction: 'SUPPRESS',
+    } as AdminCreateUserCommandInput;
 
-    const { User } = await this.identityServiceProvider
-      .adminCreateUser(params)
-      .promise();
+    const { User } = await new Promise<AdminCreateUserCommandOutput>(
+      (resolve, reject) => {
+        this.identityProvider
+          .adminCreateUser(params)
+          .then(response => {
+            resolve(response);
+          })
+          .catch(err => reject(err));
+      },
+    );
 
     if (User) {
       if (User.Attributes) {

@@ -32,8 +32,9 @@ export abstract class BaseEntity {
   @Column({
     type: 'int8',
     name: 'created_by_id',
+    nullable: true,
   })
-  createdById: number;
+  createdById?: number;
 
   @Column({
     type: 'int8',

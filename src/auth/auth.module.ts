@@ -5,6 +5,7 @@ import { CreateUserService } from './services';
 import { CognitoProvider } from '@/core/infra/aws/providers';
 
 @Module({
+  imports: [],
   controllers: [AuthController],
   providers: [UserRepository, CreateUserService, CognitoProvider],
 })
