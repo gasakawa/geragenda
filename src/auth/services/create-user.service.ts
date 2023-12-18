@@ -22,7 +22,8 @@ export class CreateUserService {
         );
       }
 
-      const { userSub } = await this.cognitoProvider.signup(data);
+      const { userSub, isActive, isConfirmed } =
+        await this.cognitoProvider.signup(data);
 
       if (userSub) {
         const user = new UserEntity();
@@ -37,8 +38,9 @@ export class CreateUserService {
         await this.userRepo.save(user, tx);
         await tx.commitTransaction();
         return {
-          isConfirmed: false,
-          userSub: userSub,
+          isConfirmed,
+          userSub,
+          isActive,
         };
       }
     } catch (error) {

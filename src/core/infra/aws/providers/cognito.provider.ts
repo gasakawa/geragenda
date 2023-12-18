@@ -73,7 +73,8 @@ export class CognitoProvider {
 
         return {
           userSub: sub[0].Value || '',
-          isConfirmed: User.Enabled || false,
+          isConfirmed: false,
+          isActive: false,
         };
       }
     }
