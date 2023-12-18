@@ -31,14 +31,14 @@ export abstract class BaseEntity {
 
   @Column({
     type: 'int8',
-    name: 'created_by',
+    name: 'created_by_id',
   })
-  createdBy: number;
+  createdById: number;
 
   @Column({
     type: 'int8',
-    name: 'deleted_by',
+    name: 'deleted_by_id',
     nullable: true,
   })
-  deletedBy?: number;
+  deletedById?: number;
 }

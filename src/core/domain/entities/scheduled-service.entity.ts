@@ -66,4 +66,18 @@ export class ScheduledServiceEntity extends BaseEntity {
     referencedColumnName: 'id',
   })
   tenantService: TenantServiceEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'created_by_id',
+    referencedColumnName: 'id',
+  })
+  createdBy: UserEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'deleted_by_id',
+    referencedColumnName: 'id',
+  })
+  deletedBy: UserEntity;
 }

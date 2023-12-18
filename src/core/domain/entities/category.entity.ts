@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { TenantServiceEntity } from './tenant-service.entity';
+import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'categories',
@@ -20,4 +21,18 @@ export class CategoryEntity extends BaseEntity {
 
   @OneToMany(() => TenantServiceEntity, service => service.category)
   services: TenantServiceEntity[];
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'created_by_id',
+    referencedColumnName: 'id',
+  })
+  createdBy: UserEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'deleted_by_id',
+    referencedColumnName: 'id',
+  })
+  deletedBy: UserEntity;
 }

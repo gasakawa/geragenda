@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { AddressEntity } from './address.entity';
+import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'tenants',
@@ -31,4 +32,18 @@ export class TenantEntity extends BaseEntity {
     referencedColumnName: 'id',
   })
   addresses: AddressEntity[];
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'created_by_id',
+    referencedColumnName: 'id',
+  })
+  createdBy: UserEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'deleted_by_id',
+    referencedColumnName: 'id',
+  })
+  deletedBy: UserEntity;
 }

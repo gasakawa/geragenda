@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { CategoryEntity } from './category.entity';
 import { TenantEntity } from './tenant.entity';
+import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'tenant_services',
@@ -61,4 +62,18 @@ export class TenantServiceEntity extends BaseEntity {
     referencedColumnName: 'id',
   })
   tenant: TenantEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'created_by_id',
+    referencedColumnName: 'id',
+  })
+  createdBy: UserEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'RESTRICT' })
+  @JoinColumn({
+    name: 'deleted_by_id',
+    referencedColumnName: 'id',
+  })
+  deletedBy: UserEntity;
 }
