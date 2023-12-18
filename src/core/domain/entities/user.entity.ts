@@ -29,9 +29,15 @@ export class UserEntity extends BaseEntity {
 
   @Column({
     name: 'is_active',
-    default: true,
+    default: false,
   })
   isActive: boolean;
+
+  @Column({
+    name: 'is_confirmed',
+    default: false,
+  })
+  isConfirmed: boolean;
 
   @Column({
     name: 'mobile_number',
@@ -45,6 +51,13 @@ export class UserEntity extends BaseEntity {
     nullable: true,
   })
   tenantId?: number;
+
+  @Column({
+    name: 'sub',
+    type: 'text',
+    nullable: true,
+  })
+  sub?: string;
 
   @ManyToMany(() => RoleEntity)
   @JoinTable({

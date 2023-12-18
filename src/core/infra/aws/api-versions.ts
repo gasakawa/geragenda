@@ -1,3 +1,3 @@
 export const AWSVersions = () => ({
-  cognito: '2014-06-30',
+  cognito: '2016-04-18',
 });

@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configs } from './config';
 import { TypeOrmConfig } from './config/typeorm.config';
+import { CognitoProvider } from '@/core/infra/aws/providers';
 
 @Global()
 @Module({
@@ -17,7 +18,7 @@ import { TypeOrmConfig } from './config/typeorm.config';
       useFactory: (config: TypeOrmConfig) => config,
     }),
   ],
-  providers: [],
+  providers: [CognitoProvider],
   exports: [],
 })
 export class InfraModule {}

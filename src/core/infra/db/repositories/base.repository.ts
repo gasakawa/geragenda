@@ -28,13 +28,11 @@ export abstract class BaseRepository<T> {
   findAll(): Promise<T[]> {
     return this.repository.manager.find(this.getEntityClass());
   }
-  async save(entityOrEntities: T | T[], tx?: Transaction): Promise<T | T[]> {
+  async save(entityOrEntities: T | T[], tx: Transaction): Promise<T | T[]> {
     const qb = tx
       ? tx.manager.createQueryBuilder().insert()
-      : this.repository.manager
-          .createQueryBuilder()
-          .useTransaction(true)
-          .insert();
+      : this.repository.manager.createQueryBuilder().insert();
+
     const result = await qb
       .into(this.getEntityClass())
       .values(entityOrEntities)
