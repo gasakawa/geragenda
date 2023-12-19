@@ -6,7 +6,6 @@ import {
   FindOneOptions,
   Repository,
   FindOptionsWhere,
-  SaveOptions,
   UpdateResult,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -20,18 +19,21 @@ export abstract class BaseRepository<T> {
 
   abstract getEntityClass(): any;
 
-  find(entity: Partial<T>): Promise<T[]> {
-    return this.repository.manager.find(this.getEntityClass(), {
+  find(entity: Partial<T>, tx?: Transaction): Promise<T[]> {
+    const manager = tx ? tx.manager : this.repository.manager;
+    return manager.find(this.getEntityClass(), {
       where: entity,
     } as FindManyOptions<T>);
   }
 
-  findBy(where: FindOptionsWhere<T> | FindOptionsWhere<T>[]): Promise<T[]> {
-    return this.repository.manager.findBy(this.getEntityClass(), where);
+  findBy(where: FindOptionsWhere<T>, tx?: Transaction): Promise<T[]> {
+    const manager = tx ? tx.manager : this.repository.manager;
+    return manager.findBy(this.getEntityClass(), where);
   }
 
-  findOne(entity: Partial<T>): Promise<T> {
-    return this.repository.manager.findOne(this.getEntityClass(), {
+  findOne(entity: Partial<T>, tx?: Transaction): Promise<T> {
+    const manager = tx ? tx.manager : this.repository.manager;
+    return manager.findOne(this.getEntityClass(), {
       where: entity,
     } as FindOneOptions<T>);
   }
@@ -40,18 +42,11 @@ export abstract class BaseRepository<T> {
     return this.repository.manager.find(this.getEntityClass());
   }
 
-  save(entity: T, options?: SaveOptions, tx?: Transaction): Promise<T>;
-  save(entities: T[], options?: SaveOptions, tx?: Transaction): Promise<T[]>;
-  async save(
-    entityOrEntities: T | T[],
-    options?: SaveOptions,
-    tx?: Transaction,
-  ): Promise<T | T[]> {
+  save(entity: T, tx?: Transaction): Promise<T>;
+  save(entities: T[], tx?: Transaction): Promise<T[]>;
+  async save(entityOrEntities: T | T[], tx?: Transaction): Promise<T | T[]> {
     const manager = tx ? tx.manager : this.repository.manager;
-    return manager.save<T | T[]>(entityOrEntities, {
-      ...options,
-      transaction: !tx,
-    });
+    return manager.save<T | T[]>(entityOrEntities);
   }
 
   async update(
@@ -61,7 +56,7 @@ export abstract class BaseRepository<T> {
   ): Promise<UpdateResult> {
     const manager = tx ? tx.manager : this.repository.manager;
 
-    return manager.update(this.getEntityClass(), criteria, data);
+    return manager.update<T>(this.getEntityClass(), criteria, data);
   }
 
   delete(keys: Partial<T>, tx?: Transaction): Promise<DeleteResult> {

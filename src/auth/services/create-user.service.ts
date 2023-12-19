@@ -16,7 +16,7 @@ export class CreateUserService {
   async execute(data: SignupUserRequestDto): Promise<SignupUserResponseDto> {
     const tx = await this.userRepo.startTrx();
     try {
-      const usr = await this.userRepo.findOne({ email: data.email });
+      const usr = await this.userRepo.findOne({ email: data.email }, tx);
 
       if (usr) {
         throw new BadRequestException(
