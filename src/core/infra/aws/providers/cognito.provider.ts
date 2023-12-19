@@ -6,7 +6,7 @@ import {
   CognitoIdentityProvider,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { AWSVersions } from '../api-versions';
-import { SignupUserRequestDto, SignupUserResponseDto } from '@/auth/dto';
+import { SignupUserResponseDto } from '@/auth/dto';
 
 @Injectable()
 export class CognitoProvider {
@@ -28,28 +28,33 @@ export class CognitoProvider {
     });
   }
 
-  async signup(data: SignupUserRequestDto): Promise<SignupUserResponseDto> {
+  async signup(
+    email: string,
+    name: string,
+    role: number,
+    tenant: string,
+  ): Promise<SignupUserResponseDto> {
     const userAttributes = [
       {
         Name: 'email',
-        Value: data.email,
+        Value: email,
       },
       {
         Name: 'name',
-        Value: data.name,
+        Value: name,
       },
       {
         Name: 'custom:tenant',
-        Value: 'customer',
+        Value: tenant,
       },
       {
         Name: 'custom:role',
-        Value: `${data.role}`,
+        Value: role,
       },
     ];
 
     const params = {
-      Username: data.email,
+      Username: email,
       UserPoolId: this.userPoolId,
       DesiredDeliveryMediums: ['EMAIL'],
       UserAttributes: userAttributes,

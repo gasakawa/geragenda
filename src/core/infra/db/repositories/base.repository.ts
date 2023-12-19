@@ -72,12 +72,12 @@ export abstract class BaseRepository<T> {
     return queryRunner;
   }
 
-  async commitTrx(tx: Transaction): Promise<void> {
+  async commit(tx: Transaction): Promise<void> {
     await tx.commitTransaction();
     await tx.release();
   }
 
-  async rollbackTrx(tx: Transaction): Promise<void> {
+  async rollback(tx: Transaction): Promise<void> {
     await tx.rollbackTransaction();
     await tx.release();
   }

@@ -19,7 +19,7 @@
     "test:cov": "yarn test --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:staged": "yarn test --findRelatedTests",
+    "test:staged": "jest --bail --findRelatedTests -c jest-unit.config.js",
     "prepare": "husky install",
     "typeorm": "ts-node  -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migrations:generate": "yarn typeorm migration:generate  -d ./src/core/infra/db/config/migrations.config.ts",
@@ -76,4 +76,5 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "^4.7.4"
   }
+  
 }

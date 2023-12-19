@@ -24,8 +24,15 @@ export class CreateUserService {
         );
       }
 
+      const tenant = data.tenant ? 'company' : 'customer';
+
       const { userSub, isActive, isConfirmed } =
-        await this.cognitoProvider.signup(data);
+        await this.cognitoProvider.signup(
+          data.email,
+          data.name,
+          data.role,
+          tenant,
+        );
 
       if (userSub) {
         const user = new UserEntity();
@@ -38,7 +45,7 @@ export class CreateUserService {
         });
 
         await this.userRepo.save(user, tx);
-        await tx.commitTransaction();
+        await this.userRepo.commit(tx);
         return {
           isConfirmed,
           userSub,
@@ -46,7 +53,7 @@ export class CreateUserService {
         };
       }
     } catch (error) {
-      await tx.rollbackTransaction();
+      await this.userRepo.rollback(tx);
       throw error;
     }
   }
