@@ -1,0 +1,13 @@
+{
+  "default": {
+    "pt": {
+      "DefaultMessage": "Um erro inesperado ocorreu"
+    }
+  },
+  "auth": {
+    "pt": {
+      "UserNotFound": "Usuário não encontrado",
+      "EmailAlreadyUsed": "O email já foi cadastrado"
+    }
+  }
+}

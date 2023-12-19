@@ -3,6 +3,8 @@ import { UserRepository } from '@/core/infra/db/repositories/user.repository';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignupUserRequestDto, SignupUserResponseDto } from '../dto';
 import { UserEntity } from '@/core/domain/entities/user.entity';
+import { getErrorMessage } from '@/common/messages/handle.message';
+import { MessageKeyEnum, ModuleEnum } from '@/core/types/enums';
 
 @Injectable()
 export class CreateUserService {
@@ -18,7 +20,7 @@ export class CreateUserService {
 
       if (usr) {
         throw new BadRequestException(
-          `The email ${data.email} is already used`,
+          getErrorMessage(ModuleEnum.AUTH, MessageKeyEnum.EMAIL_ALREADY_USED),
         );
       }
 
