@@ -32,8 +32,10 @@ export class CognitoProvider {
     email: string,
     name: string,
     role: number,
-    tenant: string,
+    tenant: number,
   ): Promise<SignupUserResponseDto> {
+    const tenantType = tenant ? 'tenant' : 'customer';
+
     const userAttributes = [
       {
         Name: 'email',
@@ -45,7 +47,7 @@ export class CognitoProvider {
       },
       {
         Name: 'custom:tenant',
-        Value: tenant,
+        Value: tenantType,
       },
       {
         Name: 'custom:role',

@@ -24,14 +24,12 @@ export class CreateUserService {
         );
       }
 
-      const tenant = data.tenant ? 'company' : 'customer';
-
       const { userSub, isActive, isConfirmed } =
         await this.cognitoProvider.signup(
           data.email,
           data.name,
           data.role,
-          tenant,
+          data.tenant,
         );
 
       if (userSub) {
