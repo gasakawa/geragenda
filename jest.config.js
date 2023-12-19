@@ -10,4 +10,5 @@ module.exports = {
     '@/(.*)': '<rootDir>/src/$1',
   },
   moduleFileExtensions: ['js', 'json', 'ts'],
+  resetMocks: true,
 };
