@@ -5,6 +5,7 @@ import { json } from 'express';
 import { AppConfig } from './infra/config/app.config';
 import { apiSetup } from './infra/setup/api.setup';
 import { join } from 'path';
+import { LanguageInterceptor } from '@/core/interceptors/language.interceptor';
 
 const STATIC_FILE_PATH = join(__dirname, '../../../public');
 
@@ -14,6 +15,7 @@ export const bootstrap = async <T>(AppModule: Type<T>) => {
 
   app.use(json({ limit: '1mb' }));
   app.useStaticAssets(STATIC_FILE_PATH);
+  app.useGlobalInterceptors(new LanguageInterceptor());
 
   apiSetup(app);
 
