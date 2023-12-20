@@ -9,7 +9,7 @@
       "UserNotFound": "Usuário não encontrado",
       "EmailAlreadyUsed": "O email já foi cadastrado",
       "UserAlreadyConfirmed": "Este usuário já foi confirmado",
-      "WrongTemporaryPassword": "A senha temporária está incorreta" 
+      "WrongTemporaryPassword": "A senha temporária está incorreta"
     }
   }
 }

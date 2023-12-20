@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CognitoProvider } from '@/core/infra/aws/providers';
 import { UserRepository } from '@/core/infra/db/repositories/user.repository';
 import { ChangeInitialPasswordRequestDto } from '../dto/change-initial-password-request.dto';
@@ -17,7 +21,13 @@ export class ChangeInitialPasswordService {
     try {
       const user = await this.userRepo.findOne({ email: dto.username }, tx);
 
-      if (user?.isConfirmed) {
+      if (!user) {
+        throw new NotFoundException(
+          getErrorMessage(ModuleEnum.AUTH, MessageKeyEnum.USER_NOT_FOUND),
+        );
+      }
+
+      if (user.isConfirmed) {
         throw new BadRequestException(
           getErrorMessage(
             ModuleEnum.AUTH,
