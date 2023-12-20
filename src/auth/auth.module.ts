@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { UserRepository } from '@/core/infra/db/repositories/user.repository';
-import { CreateUserService } from './services';
+import { ChangeInitialPasswordService, CreateUserService } from './services';
 import {
   CognitoProvider,
   CognitoProviderKey,
@@ -16,6 +16,7 @@ import { buildCognitoProviderInstance } from '@/core/infra/aws/providers/aws.pro
     UserRepository,
     CreateUserService,
     CognitoProvider,
+    ChangeInitialPasswordService,
     {
       provide: CognitoProviderKey,
       inject: [ConfigService],
