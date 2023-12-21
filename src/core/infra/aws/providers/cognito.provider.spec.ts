@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { AdminCreateUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  AdminCreateUserCommandOutput,
+  InitiateAuthCommandOutput,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { CognitoProvider } from './cognito.provider';
 
 const ConfigServiceMock = jest.fn().mockImplementation(() => ({
@@ -21,6 +24,7 @@ const ConfigServiceMock = jest.fn().mockImplementation(() => ({
 
 const CognitoIdentityProviderMock = jest.fn().mockImplementation(() => ({
   adminCreateUser: jest.fn(),
+  initiateAuth: jest.fn(),
 }));
 
 describe('CognitoProvider', () => {
@@ -80,6 +84,57 @@ describe('CognitoProvider', () => {
         UserPoolId: 'user-pool-id',
         DesiredDeliveryMediums: ['EMAIL'],
         UserAttributes: userAttributes,
+      });
+    });
+  });
+
+  describe('signIn', () => {
+    const output = {
+      AuthenticationResult: {
+        AccessToken: faker.string.alphanumeric({ length: 20 }),
+        ExpiresIn: 1,
+        TokenType: 'Bearer',
+        RefreshToken: faker.string.alphanumeric({ length: 20 }),
+      },
+      $metadata: {},
+    } as InitiateAuthCommandOutput;
+
+    it('should authenticate user', async () => {
+      const params = {
+        username: faker.string.uuid(),
+        password: faker.string.alphanumeric({ length: 8 }),
+      };
+
+      jest.spyOn(cognitoMock, 'initiateAuth').mockResolvedValueOnce(output);
+
+      const result = await sut.signIn(params.username, params.password);
+
+      expect(result).toEqual({
+        accessToken: output.AuthenticationResult.AccessToken,
+        expiresIn: 1,
+        tokenType: 'Bearer',
+        idToken: 'NO_RESULT',
+        refreshToken: output.AuthenticationResult.RefreshToken,
+      });
+    });
+    it('should not authenticate user', async () => {
+      const params = {
+        username: faker.string.uuid(),
+        password: faker.string.alphanumeric({ length: 8 }),
+      };
+
+      jest
+        .spyOn(cognitoMock, 'initiateAuth')
+        .mockResolvedValueOnce({} as InitiateAuthCommandOutput);
+
+      const result = await sut.signIn(params.username, params.password);
+
+      expect(result).toEqual({
+        accessToken: 'NO_RESULT',
+        expiresIn: 0,
+        tokenType: 'NO_RESULT',
+        idToken: 'NO_RESULT',
+        refreshToken: 'NO_RESULT',
       });
     });
   });

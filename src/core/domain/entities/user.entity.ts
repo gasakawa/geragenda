@@ -59,6 +59,13 @@ export class UserEntity extends BaseEntity {
   })
   sub?: string;
 
+  @Column({
+    name: 'profile_pic_url',
+    type: 'text',
+    nullable: true,
+  })
+  profilePicUrl?: string;
+
   @ManyToMany(() => RoleEntity)
   @JoinTable({
     schema: 'config',
