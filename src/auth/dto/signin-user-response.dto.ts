@@ -7,11 +7,10 @@ export class SignInUserResponseDto {
   tokenData?: {
     name: string;
     sub: string;
-    company: string;
-    profile: number;
-    sessionId: string;
+    company?: string;
+    profile?: number;
     active: boolean;
     confirmed: boolean;
-    profilePicUrl: string;
+    profilePicUrl?: string;
   };
 }

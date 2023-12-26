@@ -1,8 +1,13 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ChangeInitialPasswordService, CreateUserService } from './services';
+import {
+  AuthenticateUserService,
+  ChangeInitialPasswordService,
+  CreateUserService,
+} from './services';
 import { SignupUserRequestDto } from './dto';
 import { ChangeInitialPasswordRequestDto } from './dto/change-initial-password-request.dto';
+import { SignInUserRequestDto } from './dto/signin-user-request.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -10,12 +15,13 @@ export class AuthController {
   constructor(
     private readonly createUserService: CreateUserService,
     private readonly changeInitialPasswordService: ChangeInitialPasswordService,
+    private readonly authenticateUserService: AuthenticateUserService,
   ) {}
 
   @ApiOperation({
-    summary: 'Signup Users',
-    description: 'Signup new users',
-    operationId: 'signup-users',
+    summary: 'Register Users',
+    description: 'Register new users',
+    operationId: 'register-users',
   })
   @HttpCode(HttpStatus.OK)
   @Post('/signup')
@@ -32,5 +38,19 @@ export class AuthController {
   @Post('/change-temporary-password')
   async changeTempPassword(@Body() body: ChangeInitialPasswordRequestDto) {
     return await this.changeInitialPasswordService.execute(body);
+  }
+
+  @ApiOperation({
+    summary: 'Authenticate User',
+    description: 'Authenticates the user',
+    operationId: 'authenticate-user',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/signin')
+  async authenticate(@Body() body: SignInUserRequestDto) {
+    return await this.authenticateUserService.execute(
+      body.email,
+      body.password,
+    );
   }
 }
