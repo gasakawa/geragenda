@@ -26,6 +26,13 @@ export class TenantEntity extends BaseEntity {
   })
   cnpj?: string;
 
+  @Column({
+    name: 'avatar_url',
+    type: 'text',
+    nullable: true,
+  })
+  avatarUrl?: string;
+
   @OneToMany(() => AddressEntity, address => address.tenant)
   @JoinColumn({
     name: 'address_id',
