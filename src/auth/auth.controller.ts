@@ -5,6 +5,7 @@ import {
   ChangeInitialPasswordService,
   ConfirmUserService,
   CreateUserService,
+  ForgotPasswordService,
 } from './services';
 import {
   ChangeInitialPasswordRequestDto,
@@ -12,6 +13,7 @@ import {
   SignInUserRequestDto,
   SignupUserRequestDto,
 } from './dto';
+import { UserEmailRequestDto } from './dto/user-email.request.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -21,6 +23,7 @@ export class AuthController {
     private readonly changeInitialPasswordService: ChangeInitialPasswordService,
     private readonly authenticateUserService: AuthenticateUserService,
     private readonly confirmUserService: ConfirmUserService,
+    private readonly forgotPasswordService: ForgotPasswordService,
   ) {}
 
   @ApiOperation({
@@ -68,5 +71,16 @@ export class AuthController {
   @Post('/confirm')
   async confirm(@Body() body: ConfirmUserRequestDto) {
     return await this.confirmUserService.execute(body.email, body.code);
+  }
+
+  @ApiOperation({
+    summary: 'Forgot Password',
+    description: 'Sends an email with a link to reset the password',
+    operationId: 'forgot-password',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('/forgot_password')
+  async forgotPassword(@Body() body: UserEmailRequestDto) {
+    return await this.forgotPasswordService.execute(body.email);
   }
 }
