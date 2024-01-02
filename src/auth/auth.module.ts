@@ -4,6 +4,7 @@ import { UserRepository } from '@/core/infra/db/repositories/user.repository';
 import {
   AuthenticateUserService,
   ChangeInitialPasswordService,
+  ConfirmUserService,
   CreateUserService,
 } from './services';
 import {
@@ -22,6 +23,7 @@ import { buildCognitoProviderInstance } from '@/core/infra/aws/providers/aws.pro
     CognitoProvider,
     ChangeInitialPasswordService,
     AuthenticateUserService,
+    ConfirmUserService,
     {
       provide: CognitoProviderKey,
       inject: [ConfigService],

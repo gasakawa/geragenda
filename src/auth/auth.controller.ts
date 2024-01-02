@@ -3,11 +3,15 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   AuthenticateUserService,
   ChangeInitialPasswordService,
+  ConfirmUserService,
   CreateUserService,
 } from './services';
-import { SignupUserRequestDto } from './dto';
-import { ChangeInitialPasswordRequestDto } from './dto/change-initial-password-request.dto';
-import { SignInUserRequestDto } from './dto/signin-user-request.dto';
+import {
+  ChangeInitialPasswordRequestDto,
+  ConfirmUserRequestDto,
+  SignInUserRequestDto,
+  SignupUserRequestDto,
+} from './dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -16,6 +20,7 @@ export class AuthController {
     private readonly createUserService: CreateUserService,
     private readonly changeInitialPasswordService: ChangeInitialPasswordService,
     private readonly authenticateUserService: AuthenticateUserService,
+    private readonly confirmUserService: ConfirmUserService,
   ) {}
 
   @ApiOperation({
@@ -52,5 +57,16 @@ export class AuthController {
       body.email,
       body.password,
     );
+  }
+
+  @ApiOperation({
+    summary: 'Confirm User',
+    description: 'Confirms the user',
+    operationId: 'confirm-user',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post('/confirm')
+  async confirm(@Body() body: ConfirmUserRequestDto) {
+    return await this.confirmUserService.execute(body.email, body.code);
   }
 }
