@@ -23,6 +23,7 @@ export class ConfirmUserService {
       await this.userRepo.commit(tx);
     } catch (error) {
       await this.userRepo.rollback(tx);
+      throw error;
     }
   }
 }
